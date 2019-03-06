@@ -1,8 +1,6 @@
 package gov.usda.ocio.disc;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class CreateCSR {
 
@@ -20,7 +18,7 @@ public class CreateCSR {
        boolean outputSwitch = false;
 
        String inputFile = "";
-       String outputFile;
+       String outputFile = "";
        String fromDate;
        String toDate;
 
@@ -77,11 +75,16 @@ public class CreateCSR {
 
        // Read input file and generate csr output file
 
+       FileWriter writer;
+       BufferedWriter bufferedWriter;
+
        BufferedReader reader;
 
         try {
             // reader = new BufferedReader(new FileReader("C:\\Temp\\20190228_SAN.txt"));
             reader = new BufferedReader(new FileReader(inputFile));
+            writer = new FileWriter(outputFile);
+            bufferedWriter = new BufferedWriter(writer);
 
             String line = reader.readLine();
 
@@ -96,14 +99,19 @@ public class CreateCSR {
                 }
 
                 csrRecord = new CSRRecord(line, heading);
-                csrRecord.setFeed("SANTIER");
-                csrRecord.addIdentifier("FEED", "SANTIER");
-                System.out.println(csrRecord.getCSR());
+                csrRecord.setFeed(feed);
 
+                csrRecord.addIdentifier("FEED", feed);
+
+                bufferedWriter.write(csrRecord.getCSR());
+                bufferedWriter.newLine();
+                // System.out.println(csrRecord.getCSR());
 
             } while (true);
 
             reader.close();
+            bufferedWriter.close();
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
