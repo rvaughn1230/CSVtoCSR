@@ -103,9 +103,13 @@ public class CreateCSR {
 
                 csrRecord.addIdentifier("FEED", feed);
 
-                bufferedWriter.write(csrRecord.getCSR());
-                bufferedWriter.newLine();
-                // System.out.println(csrRecord.getCSR());
+                // getCSR will return null of no resources
+
+                if (csrRecord.getCSR() != null) {
+                    bufferedWriter.write(csrRecord.getCSR());
+                    bufferedWriter.newLine();
+                    // System.out.println(csrRecord.getCSR());
+                }
 
             } while (true);
 

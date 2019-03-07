@@ -57,26 +57,32 @@ public class CSRRecord {
         }
 
         public String getCSR(){
-                StringBuilder s = new StringBuilder(header.getFeed() + ","
-                        + header.getFromDate() + ","
-                        + header.getToDate() + ","
-                        + header.getFromTime() + ","
-                        + header.getToTime() + ","
-                        + header.getShift() + ","
-                        + identifiers.size());
 
-                for (CSRIdentifier identifier : identifiers) {
-                        s.append(",").append(identifier.getName()).append(",").append(identifier.getValue());
+                // Return CSR record only if resource count > 0
+
+                if (resources.size() > 0) {
+
+                        StringBuilder s = new StringBuilder(header.getFeed() + ","
+                                + header.getFromDate() + ","
+                                + header.getToDate() + ","
+                                + header.getFromTime() + ","
+                                + header.getToTime() + ","
+                                + header.getShift() + ","
+                                + identifiers.size());
+
+                        for (CSRIdentifier identifier : identifiers) {
+                                s.append(",").append(identifier.getName()).append(",").append(identifier.getValue());
+                        }
+
+                        s.append(",").append(resources.size());
+
+                        for (CSRResource resource : resources) {
+                                s.append(",").append(resource.getName()).append(",").append(resource.getValue());
+                        }
+
+                        return s.toString();
                 }
-
-                s.append(",").append(resources.size());
-
-                for (CSRResource resource : resources) {
-                        s.append(",").append(resource.getName()).append(",").append(resource.getValue());
-                }
-
-                return s.toString();
-
+                return null;
         }
 
         public void setFeed(String feed) {
