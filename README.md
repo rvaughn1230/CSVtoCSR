@@ -6,10 +6,10 @@ are used to determine what key will be generated in the CSR file and the value f
 csv file.
 
 KEYWORDS:
-  I  -   Identifer
-  R  -   Resource/Rate Code
-  FD -   From date
-  TD -   To date
+  [I]   -  Identifer
+  [R]   -  Resource/Rate Code
+  [FD]  -  From date
+  [TD]  -  To date
   
 Note:  Keywords can be enclosed within brackets [] or not.
   
