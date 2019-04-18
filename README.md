@@ -10,7 +10,9 @@ KEYWORDS:
   [R]   -  Resource/Rate Code  
   [FD]  -  From date  
   [TD]  -  To date  
-  
+  [FT]  -  From time
+  [TT]  -  To time
+
 Note:  Keywords can be enclosed within brackets [] or not.
   
 USAGE:  
@@ -19,10 +21,11 @@ Usage: CreateCSR -feed feedname [-fromdate mm/dd/yyyy] [-todate mm/dd/yyyy] -inp
   
 Example:  
 
-java -jar CreateCSR.jar -feed VMWARE -input c:\temp\vmware_20190228.csv -ouput c:\temp\vmware_20190228.txt
+java -jar CreateCSR.jar -feed VMWARE -input c:\temp\vmware_20190228.csv -output c:\temp\vmware_20190228.txt
 
+input file:
 SERVER [I], FromDate [FD], ToDate TD, DESCRIPTION I, LNXBASE2 [R], LNXCPU2 R  
 oirdbox00001, 02/01/2019, 02/28/2019, Linux base service, 1, 4
 
-Resulting CSR file:  
+Resulting CSR output file:
 VMWARE,20190201,20190228,1,3,SERVER,oirdbox00001,DESCRIPTION,Linux base service,FEED,VMWARE,2,LNXBASE2,1,LNXCPU2,4

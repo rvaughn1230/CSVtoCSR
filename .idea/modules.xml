@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CreateCSR.iml" filepath="$PROJECT_DIR$/CreateCSR.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CSVtoCSR.iml" filepath="$PROJECT_DIR$/CSVtoCSR.iml" />
     </modules>
   </component>
 </project>

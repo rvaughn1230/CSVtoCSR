@@ -11,6 +11,8 @@ public class HeaderRecord {
         Columns column;
         String name;
         String type;
+        boolean inFound = false;
+        boolean rnFound = false;
 
         for (int x = 0; x < columns.length; x++) {
             String[] pCol = columns[x].trim().split("\\W+");
@@ -23,8 +25,31 @@ public class HeaderRecord {
 
                 switch (s) {
 
-                    case "I":
+                    case "IN":
+                        inFound = true;
+                        type = s;
+                        break;
+                    case "IV":
+                        if (inFound){
+                            inFound = false;
+                        }else{
+                            throw new IllegalArgumentException("Invalid IN/IV combination");
+                        }
+                        break;
+                    case "RN":
+                        rnFound = true;
+                        type = s;
+                        break;
+                    case "RV":
+                        if (rnFound){
+                            rnFound = false;
+                        }else{
+                            throw new IllegalArgumentException("Invalid RN/RV combination");
+                        }
+                        break;
+
                     case "R":
+                    case "I":
                     case "FD":
                     case "TD":
                     case "FT":
@@ -44,7 +69,7 @@ public class HeaderRecord {
         }
     }
 
-    public Columns get(int x) {
+    Columns get(int x) {
         return colHeadings.get(x);
     }
 

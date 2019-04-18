@@ -6,17 +6,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class CSRRecord {
+class CSRRecord {
         private CSRHeader header = new CSRHeader();
         private ArrayList<CSRIdentifier> identifiers = new ArrayList<>();
         private ArrayList<CSRResource> resources = new ArrayList<>();
 
-        public CSRRecord(String record, HeaderRecord heading) {
+        CSRRecord(String record, HeaderRecord heading) {
                 String[] cols = record.split(",");
                 String colName;
                 String colType;
                 CSRIdentifier csrIdentifier;
-                CSRResource csrResource;
 
                 for (int x = 0; x < cols.length; x++) {
                         HeaderRecord.Columns col = heading.get(x);
@@ -30,12 +29,23 @@ public class CSRRecord {
                                         csrIdentifier = new CSRIdentifier(colName, cols[x]);
                                         identifiers.add(csrIdentifier);
                                         break;
+                                case "IN":
+                                        csrIdentifier = new CSRIdentifier(cols[x],cols[++x]);
+                                        identifiers.add(csrIdentifier);
+                                        break;
                                 case "R":
                                         // If resource value is blank or 0, then exit without adding resource
                                         if (cols[x].isEmpty() ||  cols[x].equals("0")){
                                                 break;
                                         }
                                         resources.add(new CSRResource(colName, Double.parseDouble(cols[x])));
+                                        break;
+                                case "RN":
+                                        // If resource value is blank or 0, then exit without adding resource
+                                        if (cols[x+1].isEmpty() ||  cols[x+1].equals("0")){
+                                                break;
+                                        }
+                                        resources.add(new CSRResource(cols[x], Double.parseDouble(cols[++x])));
                                         break;
                                 case "TD":
                                         header.setToDate(cols[x]);
@@ -56,7 +66,7 @@ public class CSRRecord {
                 }
         }
 
-        public String getCSR(){
+        String getCSR(){
 
                 // Return CSR record only if resource count > 0
 
@@ -71,7 +81,11 @@ public class CSRRecord {
                                 + identifiers.size());
 
                         for (CSRIdentifier identifier : identifiers) {
-                                s.append(",").append(identifier.getName()).append(",").append(identifier.getValue());
+                                if (identifier.getValue().contains(" ")) {
+                                        s.append(",").append(identifier.getName()).append(",").append('"').append(identifier.getValue()).append('"');
+                                }else{
+                                        s.append(",").append(identifier.getName()).append(",").append(identifier.getValue());
+                                }
                         }
 
                         s.append(",").append(resources.size());
@@ -85,15 +99,17 @@ public class CSRRecord {
                 return null;
         }
 
-        public void setFeed(String feed) {
+        void setFeed(String feed) {
                 this.header.setFeed(feed);
         }
+        void setFromDate(String fromDate){this.header.setFromDate(fromDate);}
+        void setToDate(String toDate){this.header.setToDate(toDate);}
 
-        public void addIdentifier (String name, String value){
+        void addIdentifier(String name, String value){
                identifiers.add(new CSRIdentifier(name, value));
         }
 
-        public void addResource (String name, Double value){
+        void addResource (String name, Double value){
                 resources.add(new CSRResource(name, value));
         }
 
@@ -106,7 +122,7 @@ public class CSRRecord {
                 private byte shift;
                 private final DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
-                public CSRHeader() {
+                CSRHeader() {
                         this.feed = "";
                         this.fromDate =  dateFormat.format(new Date());
                         this.toDate =  dateFormat.format(new Date());
@@ -115,19 +131,19 @@ public class CSRRecord {
                         this.shift = 1;
                 }
 
-                public String getFeed() {
+                String getFeed() {
                         return feed;
                 }
 
-                public void setFeed(String feed) {
+                void setFeed(String feed) {
                         this.feed = feed;
                 }
 
-                public String getFromDate() {
+                String getFromDate() {
                         return fromDate;
                 }
 
-                public void setFromDate(String fromDate) {
+                void setFromDate(String fromDate) {
                         try {
                             Date tempDate = new SimpleDateFormat("MM/dd/yyyy").parse(fromDate);
                             this.fromDate = dateFormat.format(tempDate);
@@ -136,11 +152,11 @@ public class CSRRecord {
                         }
                 }
 
-                public String getToDate() {
+                String getToDate() {
                         return toDate;
                 }
 
-                public void setToDate(String toDate) {
+                void setToDate(String toDate) {
                         try {
                                 Date tempDate = new SimpleDateFormat("MM/dd/yyyy").parse(toDate);
                                 this.toDate = dateFormat.format(tempDate);
@@ -149,23 +165,23 @@ public class CSRRecord {
                         }
                 }
 
-                public String getFromTime() {
+                String getFromTime() {
                         return fromTime;
                 }
 
-                public void setFromTime(String fromTime) {
+                void setFromTime(String fromTime) {
                         this.fromTime = fromTime;
                 }
 
-                public String getToTime() {
+                String getToTime() {
                         return toTime;
                 }
 
-                public void setToTime(String toTime) {
+                void setToTime(String toTime) {
                         this.toTime = toTime;
                 }
 
-                public byte getShift() {
+                byte getShift() {
                         return shift;
                 }
 
@@ -178,24 +194,24 @@ public class CSRRecord {
                 private String name;
                 private String value;
 
-                public CSRIdentifier(String name, String value) {
+                CSRIdentifier(String name, String value) {
                         this.name = name;
                         this.value = value;
                 }
 
-                public String getName() {
+                String getName() {
                         return name;
                 }
 
-                public String getValue() {
+                String getValue() {
                         return value;
                 }
 
-                public void setName(String name) {
+                void setName(String name) {
                         this.name = name;
                 }
 
-                public void setValue(String value) {
+                void setValue(String value) {
                         this.value = value;
                 }
         }
@@ -204,24 +220,24 @@ public class CSRRecord {
                 private String name;
                 private Double value;
 
-                public CSRResource(String name, Double value) {
+                CSRResource(String name, Double value) {
                         this.name = name;
                         this.value = value;
                 }
 
-                public String getName() {
+                String getName() {
                         return name;
                 }
 
-                public void setName(String name) {
+                void setName(String name) {
                         this.name = name;
                 }
 
-                public Double getValue() {
+                Double getValue() {
                         return value;
                 }
 
-                public void setValue(Double value) {
+                void setValue(Double value) {
                         this.value = value;
                 }
         }

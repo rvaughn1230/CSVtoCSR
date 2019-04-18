@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="createCSR:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/createCSR_jar</output-path>
+    <root id="archive" name="CSVtoCSR.jar">
+      <element id="module-output" name="CSVtoCSR" />
+      <element id="file-copy" path="$PROJECT_DIR$/out/artifacts/CreateCSR_jar/createCSR.jar" />
+    </root>
+  </artifact>
+</component>
