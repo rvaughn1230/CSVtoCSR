@@ -7,7 +7,6 @@ public class CreateCSR {
     public static void main(String[] args) {
 
        CSRRecord csrRecord;
-       String feed = "DEFAULT";
 
        final String usage = "Usage: CreateCSR -feed feedname [-fromdate mm/dd/yyyy] [-todate mm/dd/yyyy] -input inputfile -output outputfile";
 
@@ -16,55 +15,36 @@ public class CreateCSR {
        boolean feedSwitch = false;
        boolean inputSwitch = false;
        boolean outputSwitch = false;
+       boolean fromDateSwitch = false;
+       boolean toDateSwitch = false;
 
+
+       String feed = "DEFAULT";
        String inputFile = "";
        String outputFile = "";
-       String fromDate;
-       String toDate;
+       String fromDate = "";
+       String toDate = "";
 
        for (int i=0 ; i<args.length;i++) {
            if (args[i].equals("-feed")){
-               if (i < args.length){
                    feed = args[++i];
                    feedSwitch = true;
-               }else{
-                   System.err.println(usage);
-                   return;
-               }
            }
            if (args[i].equals("-input")) {
-               if (i < args.length) {
                    inputFile = args[++i];
                    inputSwitch = true;
-               } else {
-                   System.err.println(usage);
-                   return;
-               }
            }
            if (args[i].equals("-output")) {
-               if (i < args.length) {
                    outputFile = args[++i];
                    outputSwitch = true;
-               } else {
-                   System.err.println(usage);
-                   return;
-               }
            }
            if (args[i].equals("-fromdate")) {
-               if (i < args.length) {
                    fromDate = args[++i];
-               } else {
-                   System.err.println(usage);
-                   return;
-               }
+                   fromDateSwitch = true;
            }
            if (args[i].equals("-todate")) {
-               if (i < args.length) {
                    toDate = args[++i];
-               } else {
-                   System.err.println(usage);
-                   return;
-               }
+                   toDateSwitch = true;
            }
        }
 
@@ -101,6 +81,14 @@ public class CreateCSR {
                 csrRecord = new CSRRecord(line, heading);
                 csrRecord.setFeed(feed);
 
+                if (fromDateSwitch){
+                    csrRecord.setFromDate(fromDate);
+                }
+
+                if (toDateSwitch){
+                    csrRecord.setToDate(toDate);
+                }
+
                 csrRecord.addIdentifier("FEED", feed);
 
                 // getCSR will return null of no resources
@@ -116,7 +104,7 @@ public class CreateCSR {
             reader.close();
             bufferedWriter.close();
             writer.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
