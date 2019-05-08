@@ -12,7 +12,8 @@ class CSRRecord {
         private ArrayList<CSRResource> resources = new ArrayList<>();
 
         CSRRecord(String record, HeaderRecord heading) {
-                String[] cols = record.split(",");
+                // String[] cols = record.split(",");
+                String[] cols = splitByComma(record);
                 String colName;
                 String colType;
                 CSRIdentifier csrIdentifier;
@@ -21,8 +22,6 @@ class CSRRecord {
                         HeaderRecord.Columns col = heading.get(x);
                         colName = col.getName();
                         colType = col.getType();
-
-                        // System.out.println("column name: " + colName + " type: " + colType + " value: " + cols[x]);
 
                         switch (colType) {
                                 case "I":
@@ -97,6 +96,38 @@ class CSRRecord {
                         return s.toString();
                 }
                 return null;
+        }
+
+        static String [] splitByComma(String theCSV){
+                Boolean commaSW = false;
+                Boolean quoteSW = false;
+                int y = 0;
+                ArrayList<String> csvArray = new ArrayList<String>();
+                StringBuilder s = new StringBuilder();
+
+                for (int x=0;x<theCSV.length();x++){
+                        if (theCSV.charAt(x) == '"'){
+                                if (quoteSW){
+                                        // Hit 2nd quote in string, so turn off switch.
+                                        quoteSW = false;
+                                } else {
+                                    quoteSW = true;
+                                }
+                        } else {
+                                if (theCSV.charAt(x) == ',') {
+                                        if (!quoteSW) {
+                                                csvArray.add(s.toString());
+                                                s.delete(0, 200);
+                                        }else{
+                                                s.append(theCSV.charAt(x));
+                                        }
+                                } else {
+                                        s.append(theCSV.charAt(x));
+                                }
+                        }
+                }
+                csvArray.add(s.toString());
+                return csvArray.toArray(new String[0]);
         }
 
         void setFeed(String feed) {
@@ -196,7 +227,12 @@ class CSRRecord {
 
                 CSRIdentifier(String name, String value) {
                         this.name = name;
-                        this.value = value;
+
+                        if ((name.equalsIgnoreCase("account_code")) && value.length() == 7) {
+                            this.value = value + "USAGE";
+                        }else {
+                            this.value = value;
+                        }
                 }
 
                 String getName() {
